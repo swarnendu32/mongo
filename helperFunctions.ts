@@ -10,6 +10,15 @@ import {
 } from "mongodb";
 import { client } from "./mongoDriver";
 
+/**
+ * Check if a post is available in the database.
+ * @async
+ * @function isPostAvailable
+ * @param {string} postId - The ID of the post to check.
+ * @param {Db} db - The database instance to use.
+ * @returns {Promise<WithId<Document> | null>} Returns the post document if it exists and is not deleted, otherwise returns null.
+ */
+
 export async function isPostAvailable(
     postId: string,
     db: Db
@@ -19,6 +28,16 @@ export async function isPostAvailable(
         .findOne({ _id: new ObjectId(postId), deletedAt: { $exists: false } });
     return post;
 }
+
+/**
+ * Check if an account is blocked by another account.
+ * @async
+ * @function isBlocked
+ * @param {string} accountId - The ID of the account to check.
+ * @param {string} authorId - The ID of the author to check against.
+ * @param {Db} db - The database instance to use.
+ * @returns {Promise<WithId<Document> | null>} Returns the blocked document if it exists, otherwise returns null.
+ */
 
 export async function isBlocked(
     accountId: string,
@@ -33,6 +52,16 @@ export async function isBlocked(
     });
     return blocked;
 }
+
+/**
+ * Check if an account is private and if the author is followed by the account.
+ * @async
+ * @function privateFollowingStatus
+ * @param {string} authorId - The ID of the author to check.
+ * @param {string} accountId - The ID of the account to check.
+ * @param {Db} db - The database instance to use.
+ * @returns {Promise<WithId<Document> | null>} Returns the author document if it exists and is not private or if it is private and followed by the account, otherwise returns null.
+ */
 
 export async function privateFollowingStatus(
     authorId: string,
@@ -56,6 +85,16 @@ export async function privateFollowingStatus(
     return author;
 }
 
+/**
+ * Check if a post has been viewed by an account.
+ * @async
+ * @function postViewStatus
+ * @param {string} postId - The ID of the post to check.
+ * @param {string} accountId - The ID of the account to check.
+ * @param {Db} db - The database instance to use.
+ * @returns {Promise<WithId<Document> | null>} Returns the viewed document if it exists, otherwise returns null.
+ */
+
 export async function postViewStatus(
     postId: string,
     accountId: string,
@@ -67,6 +106,16 @@ export async function postViewStatus(
     });
     return viewed;
 }
+
+/**
+ * Execute a transaction with retries on transient errors or unknown commit results.
+ * @async
+ * @function executeTransaction
+ * @param {string} dbName - The name of the database to use.
+ * @param {Function} transactionFunction - The function to execute in the transaction.
+ * @param {number} [maxRetries=5] - The maximum number of retries on transient errors or unknown commit results.
+ * @param {...any[]} args - Additional arguments to pass to the transaction function.
+ */
 
 export async function executeTransaction(
     dbName: string,

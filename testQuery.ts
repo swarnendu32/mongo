@@ -5,9 +5,19 @@ import {
     isPostAvailable,
     postViewStatus,
 } from "./helperFunctions";
-import { getAllJSDocTagsOfKind } from "typescript";
 
-async function zipcodes(
+/**
+ * Example transaction function to view and like a post.
+ * @async
+ * @function transactionFunctionExample
+ * @param {MongoClient} client - The MongoDB client instance to use.
+ * @param {ClientSession} session - The MongoDB client session to use.
+ * @param {string} dbName - The name of the database to use.
+ * @param {string} postId - The ID of the post to view and like.
+ * @param {string} accountId - The ID of the account viewing and liking the post.
+ */
+
+async function transactionFunctionExample(
     client: MongoClient,
     session: ClientSession,
     dbName: string,
@@ -79,7 +89,7 @@ async function zipcodes(
 
 executeTransaction(
     "myDB",
-    zipcodes,
+    transactionFunctionExample,
     undefined,
     "64a3c6d2624442c062d11650",
     new ObjectId().toString(),
